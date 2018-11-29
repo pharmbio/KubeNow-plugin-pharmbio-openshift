@@ -1,0 +1,103 @@
+# Create an OSEv3 group that contains the masters and nodes groups
+[OSEv3:children]
+masters
+nodes
+etcd
+
+# Set variables common for all OSEv3 hosts
+[OSEv3:vars]
+
+# extra 3.11 repo
+openshift_additional_repos=[{'id': 'centos-okd-ci', 'name': 'centos-okd-ci', 'baseurl' :'http://buildlogs.centos.org/centos/7/paas/x86_64/openshift-origin311/', 'gpgcheck' :'0', 'enabled' :'1'}]
+
+# Configure SDN cluster network and kubernetes service CIDR blocks. These
+# network blocks should be private and should not conflict with network blocks
+# in your infrastructure that pods may require access to. Can not be changed
+# after deployment.
+osm_cluster_network_cidr=10.128.0.0/14
+openshift_portal_net=172.30.0.0/16
+
+# Configure number of bits to allocate to each host's subnet e.g. 8
+# would mean a /24 network on the host.
+osm_host_subnet_length=9
+
+# SSH user, this user should allow ssh based auth without requiring a password
+ansible_ssh_user=centos
+ansible_become=yes
+openshift_deployment_type=origin
+openshift_release=v3.11
+openshift_disable_check=docker_storage,memory_availability,disk_availability,docker_image_availability
+
+openshift_master_cluster_public_hostname=MASTER-PUBLIC_HOSTNAME.${domain}
+openshift_master_default_subdomain=${domain}
+openshift_master_identity_providers=[{'name': 'github', 'login': 'true', 'challenge': 'false', 'kind': 'GitHubIdentityProvider', 'clientID': '99048b661f4c0d704ae1', 'clientSecret': '2b0a14121a3f76ec8fb775db9ddd1afa1581be26', 'organizations': ['pharmbio'] },{'name':'httpasswd_auth','kind':'HTPasswdPasswordIdentityProvider', 'login':'true', 'challenge': 'true'}]
+
+# make sure this htpasswd file exists
+openshift_master_htpasswd_file=/tmp/test_htpasswd
+
+#openshift_no_proxy='pharmb.io,130.238.44.5'
+#openshift_generate_no_proxy_hosts=True
+#os_firewall_enabled=false
+
+#openshift_master_api_port=443
+#openshift_master_console_port=443
+## ---- Metrics ----
+#openshift_metrics_install_metrics=true
+#openshift_metrics_start_cluster=true
+
+#openshift_hosted_metrics_storage_kind=nfs
+#openshift_hosted_metrics_storage_access_modes=['ReadWriteOnce']
+#openshift_hosted_metrics_storage_nfs_directory=/exports
+#openshift_hosted_metrics_storage_nfs_options='*(rw,root_squash)'
+#openshift_hosted_metrics_storage_volume_name=metrics
+#openshift_hosted_metrics_storage_volume_size=10Gi
+#openshift_hosted_metrics_storage_labels={'storage': 'metrics'}
+
+#openshift_metrics_cassandra_storage_type=pv
+##openshift_metrics_hawkular_hostname=hawkular-metrics.os.pharmb.io
+openshift_enable_unsupported_configurations=True
+
+#
+# ---- Logging ----
+openshift_logging_install_logging=true
+
+openshift_logging_elasticsearch_cpu_limit=300m
+openshift_logging_elasticsearch_memory_limit=512Mi
+openshift_logging_es_ops_cpu_limit=300m
+openshift_logging_es_ops_memory_limit=512Mi
+openshift_logging_es_nodeselector={"node-role.kubernetes.io/infra": "true"}
+
+openshift_logging_kibana_cpu_limit=100m
+openshift_logging_kibana_memory_limit=128Mi
+openshift_logging_kibana_ops_cpu_limit=100m
+openshift_logging_kibana_ops_memory_limit=128Mi
+
+openshift_logging_es_cluster_size=1
+openshift_logging_es_ops_cluster_size=2
+openshift_logging_fluentd_memory_limit=128Mi
+
+openshift_hosted_logging_storage_kind=nfs
+openshift_hosted_logging_storage_access_modes=['ReadWriteOnce']
+openshift_hosted_logging_storage_nfs_directory=/exports
+openshift_hosted_logging_storage_nfs_options='*(rw,root_squash)'
+openshift_hosted_logging_storage_volume_name=logging
+openshift_hosted_logging_storage_volume_size=10Gi
+openshift_hosted_logging_storage_labels={'storage': 'logging'}
+
+
+# host group for masters
+[masters]
+${masters}
+
+# host group for etcd
+[etcd]
+${masters}
+
+# host group for nodes, e.g: openshift_node_group_name='node-config-master-infra', openshift_node_group_name='node-config-compute'
+[nodes]
+${masters} openshift_node_group_name='node-config-master-infra'
+${nodes} openshift_node_group_name='node-config-compute'
+
+# NFS hosts
+[nfs]
+${masters}
