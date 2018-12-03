@@ -28,7 +28,8 @@ openshift_deployment_type=origin
 openshift_release=v3.11
 openshift_disable_check=docker_storage,memory_availability,disk_availability,docker_image_availability
 
-openshift_master_cluster_public_hostname=MASTER-PUBLIC_HOSTNAME.${domain}
+# If you want nip.io as domain, then specify your-host.$${domain} as domain and s$${domain} as your subdomain
+openshift_master_cluster_public_hostname=PUBLICNAME.${domain}
 openshift_master_default_subdomain=${domain}
 openshift_master_identity_providers=[{'name': 'github', 'login': 'true', 'challenge': 'false', 'kind': 'GitHubIdentityProvider', 'clientID': '99048b661f4c0d704ae1', 'clientSecret': '2b0a14121a3f76ec8fb775db9ddd1afa1581be26', 'organizations': ['pharmbio'] },{'name':'httpasswd_auth','kind':'HTPasswdPasswordIdentityProvider', 'login':'true', 'challenge': 'true'}]
 
@@ -61,8 +62,9 @@ openshift_enable_unsupported_configurations=True
 # ---- Logging ----
 openshift_logging_install_logging=true
 
-openshift_logging_es_nodeselector={'node-role.kubernetes.io/infra': 'true'}
+openshift_logging_es_nodeselector={"node-role.kubernetes.io/infra": "true"}
 
+openshift_logging_es_memory_limit=2Gi
 openshift_logging_kibana_cpu_limit=100m
 openshift_logging_kibana_memory_limit=128Mi
 
