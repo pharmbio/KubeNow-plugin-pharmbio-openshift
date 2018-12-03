@@ -61,7 +61,7 @@ openshift_enable_unsupported_configurations=True
 # ---- Logging ----
 openshift_logging_install_logging=true
 
-openshift_logging_es_nodeselector={"node-role.kubernetes.io/infra": "true"}
+openshift_logging_es_nodeselector={'node-role.kubernetes.io/infra': 'true'}
 
 openshift_logging_kibana_cpu_limit=100m
 openshift_logging_kibana_memory_limit=128Mi
