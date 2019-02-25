@@ -35,8 +35,8 @@ sed -i -e "s/node_ip_if2.*/node_ip_if2 = [\"130.238.44.26\"]/g" config.tfvars
 sed -i -e "s/master_vcpu.*/master_vcpu = \"2\"/g" config.tfvars
 sed -i -e "s/master_memory.*/master_memory = \"8096\"/g" config.tfvars
 sed -i -e "s/master_disk_size.*/master_disk_size = \"50\"/g" config.tfvars
-sed -i -e "s/node_vcpu.*/master_vcpu = \"2\"/g" config.tfvars
-sed -i -e "s/node_memory.*/master_memory = \"8096\"/g" config.tfvars
+sed -i -e "s/node_vcpu.*/node_vcpu = \"2\"/g" config.tfvars
+sed -i -e "s/node_memory.*/node_memory = \"8096\"/g" config.tfvars
 sed -i -e "s/node_disk_size.*/node_disk_size = \"50\"/g" config.tfvars
 
 # Deploy infrastructure with KubeNow
