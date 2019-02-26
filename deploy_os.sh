@@ -107,4 +107,4 @@ docker run -t \
    -e PLAYBOOK_FILE=/openshift-ansible/playbooks/deploy_cluster.yml \
    -e ANSIBLE_STDOUT_CALLBACK=debug \
    -e OPTS="-v" \
-   docker.io/openshift/origin-ansible:${OS_VERSION}
+   docker.io/openshift/origin-ansible:v${OS_VERSION}
